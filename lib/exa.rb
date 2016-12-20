@@ -2,12 +2,17 @@ require 'exa/version'
 
 module Exa
   class TreeNode
-    attr_reader :name, :value, :children, :parent
+    attr_reader :name, :value, :parent, :overlays
     def initialize(name:, value: '--', parent: nil)
       @name = name
       @value = value
       @parent = parent
       @children = []
+      @overlays = []
+    end
+
+    def inspect
+      "<#{@name}>"
     end
 
     def update(val)
@@ -19,6 +24,15 @@ module Exa
       child = TreeNode.new(name: name, parent: self)
       @children << child
       child
+    end
+
+    def unify(overlay)
+      @overlays << overlay
+      self
+    end
+
+    def children
+      @children + @overlays.flat_map(&:children)
     end
   end
 
@@ -52,6 +66,13 @@ module Exa
 
     def recall(path)
       visitor.seek(path)
+    end
+    alias :[] :recall
+
+    def union(source, target)
+      # create union between source and target paths
+      src_node, tgt_node = recall(source), recall(target)
+      tgt_node.unify(src_node)
     end
 
     def visitor
