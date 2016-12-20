@@ -1,6 +1,6 @@
 name: exa
-summary: "TODO: Summary"
-description: "TODO: Description"
+summary: "recursive in-memory algos and data structures"
+description: "recursive in-memory structures"
 license: MIT
 authors: Joseph Weissman
 email: jweissman1986@gmail.com
